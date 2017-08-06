@@ -80,6 +80,7 @@ public class GlossaryFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Setup Clear Button
         buttClear = (Button) getActivity().findViewById(R.id.butt_clear);
         buttClear.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -87,7 +88,10 @@ public class GlossaryFragment extends Fragment {
             }
         });
 
+        // Setup Filter Text
         txtFilter = (EditText) getActivity().findViewById(R.id.txt_filter);
+        int leadingMargin = 16;
+        //txtFilter.setSpan(new BulletSpan(leadingMargin), start, end, 0);
         txtFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -107,6 +111,8 @@ public class GlossaryFragment extends Fragment {
                 } else {
                     buttClear.setVisibility(View.VISIBLE);
                 }
+
+                mAdapter.getFilter().filter(s.toString());
             }
         });
 

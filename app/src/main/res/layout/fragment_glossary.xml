@@ -30,8 +30,8 @@
 
         <Button
             android:id="@+id/butt_clear"
-            android:layout_width="@android:dimen/app_icon_size"
-            android:layout_height="@android:dimen/app_icon_size"
+            android:layout_width="24dip"
+            android:layout_height="24dip"
             android:layout_marginRight="10dp"
             android:layout_weight="0"
             android:background="@android:drawable/ic_menu_close_clear_cancel"
