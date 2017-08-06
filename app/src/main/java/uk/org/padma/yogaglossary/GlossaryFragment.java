@@ -3,10 +3,14 @@ package uk.org.padma.yogaglossary;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -28,8 +32,12 @@ public class GlossaryFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     //private static final String ARG_PARAM1 = "param1";
     //private static final String ARG_PARAM2 = "param2";
-    public ArrayList<GEntry> entries = new ArrayList<GEntry>();
+    //public ArrayList<GEntry> entries = new ArrayList<GEntry>();
     public GlossaryAdapter mAdapter;
+
+    EditText txtFilter;
+    Button buttClear;
+
 
     // TODO: Rename and change types of parameters
     //private String mParam1;
@@ -72,8 +80,39 @@ public class GlossaryFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        buttClear = (Button) getActivity().findViewById(R.id.butt_clear);
+        buttClear.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                txtFilter.setText("");
+            }
+        });
 
-        mAdapter = new GlossaryAdapter(getActivity(), entries);
+        txtFilter = (EditText) getActivity().findViewById(R.id.txt_filter);
+        txtFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+             }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i("ontext", String.valueOf(s));
+                if (s.length() == 0) {
+                    buttClear.setVisibility(View.INVISIBLE);
+                } else {
+                    buttClear.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
+        //mAdapter = new GlossaryAdapter(getActivity(), entries);
+        mAdapter = new GlossaryAdapter(getActivity(), new ArrayList<GEntry>());
 
         ListView mListView = (ListView) getActivity().findViewById(R.id.glossary_listview);
         mListView.setAdapter(mAdapter);
@@ -114,12 +153,15 @@ public class GlossaryFragment extends Fragment {
 
             GEntry ent = new GEntry() ;
             ent.term = je.optString("term");
+            ent.search = ent.term;
             //Log.i("term===", ent.term);
             JSONArray darr = je.optJSONArray("definition");
             for (int ii = 0; ii < darr.length(); ii++) {
                 ent.definition.add( darr.optString(ii) );
+                ent.search += darr.optString(ii).replace("'","").replace(",", "").replace(" ", "");
             }
-            entries.add(ent);
+            mAdapter.entries.add(ent);
+            //entries.add(ent);
 
         }
 

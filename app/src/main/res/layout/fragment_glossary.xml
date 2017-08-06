@@ -1,7 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="3dp"
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/butt_filter_type"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0"
+            android:text="Definition"
+            />
+
+        <EditText
+            android:id="@+id/txt_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:inputType="textFilter"
+            />
+
+        <Button
+            android:id="@+id/butt_clear"
+            android:layout_width="@android:dimen/app_icon_size"
+            android:layout_height="@android:dimen/app_icon_size"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0"
+            android:background="@android:drawable/ic_menu_close_clear_cancel"
+            android:visibility="invisible"
+            />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/glossary_listview"
