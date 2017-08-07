@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -196,8 +195,8 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     // This is called when the dialog is completed and the results have been passed
     @Override
     public void onFinishEditDialog(String filter_field) {
-        Log.i("Dialog RETURN===", filter_field);
-        Log.i("Dialog txtFilter", txtFilter.getText().toString());
+        //Log.i("Dialog RETURN===", filter_field);
+        //Log.i("Dialog txtFilter", txtFilter.getText().toString());
         setButtFilterLabel(filter_field);
 
         SharedPreferences.Editor editor = mPrefs.edit();
