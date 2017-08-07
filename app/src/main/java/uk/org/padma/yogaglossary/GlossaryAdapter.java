@@ -26,7 +26,7 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
 
     public ArrayList<GEntry> entries = new ArrayList<GEntry>();
     public Filter mFilter;
-    public String filter_field;
+    public String filter_field = FILTER_ALL;
 
     public GlossaryAdapter(Context context, ArrayList<GEntry> entries) {
         super(context, 0, entries);
@@ -91,13 +91,16 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
 
             String filterSeq = chars.toString().toLowerCase();
 
-            Log.i("filter===", filterSeq +  mParent.filter_field);
+            Log.i("filter===", filterSeq);
+            Log.i("filter===", mParent.filter_field);
 
             FilterResults result = new FilterResults();
-            if (filterSeq != null && filterSeq.length() > 0) {
+            //if (filterSeq != null && filterSeq.length() > 0) {
+            if (filterSeq.length() > 0) {
                 ArrayList<GEntry> filter = new ArrayList<GEntry>();
                 //String filter_field = mParent.filter_field;
                 //for (GEntry ent : sourceObjects) {
+                Log.i("filter===", "FOOOOOOOOOO");
                 for (int idx = 0; idx < sourceObjects.size(); idx++){
                     GEntry ent = sourceObjects.get(idx);
                     // the filtering itself:
@@ -118,6 +121,7 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
                             break;
 
                         case GlossaryAdapter.FILTER_ALL:
+                        default:
                             if (ent.search.toLowerCase().contains(filterSeq)) {
                                 filter.add(ent);
                             }

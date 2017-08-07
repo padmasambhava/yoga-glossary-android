@@ -66,14 +66,13 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         String filter_field = mPrefs.getString(COOKIE_FILTER_FIElD, GlossaryAdapter.FILTER_ALL);
 
         buttFilterOptions = (Button) getActivity().findViewById(R.id.butt_filter_options);
         buttFilterOptions.setOnClickListener(new View.OnClickListener() {
              public void onClick(View v) {
-                 //SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
                  String ff = mPrefs.getString(COOKIE_FILTER_FIElD, GlossaryAdapter.FILTER_ALL);
                  FragmentManager fm = getActivity().getSupportFragmentManager();
                  FilterOptionsDialogFragment optsDialog = FilterOptionsDialogFragment.newInstance(ff);
@@ -166,14 +165,13 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
             GEntry ent = new GEntry() ;
             ent.term = je.optString("term");
             ent.search = ent.term;
-            //Log.i("term===", ent.term);
+
             JSONArray darr = je.optJSONArray("definition");
             for (int ii = 0; ii < darr.length(); ii++) {
                 ent.definition.add( darr.optString(ii) );
-                ent.search += darr.optString(ii).replace("'","").replace(",", "").replace(" ", "");
+                ent.search += darr.optString(ii).replace("'","").replace(",", "");
             }
             mAdapter.entries.add(ent);
-            //entries.add(ent);
 
         }
 
@@ -198,14 +196,16 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     // This is called when the dialog is completed and the results have been passed
     @Override
     public void onFinishEditDialog(String filter_field) {
-        Log.i("Dialog RETURNs", filter_field);
+        Log.i("Dialog RETURN===", filter_field);
+        Log.i("Dialog txtFilter", txtFilter.getText().toString());
         setButtFilterLabel(filter_field);
 
         SharedPreferences.Editor editor = mPrefs.edit();
         editor.putString(COOKIE_FILTER_FIElD, filter_field);
-        editor.apply();
+        editor.commit();
         mAdapter.setFilterField(filter_field);
-        mAdapter.getFilter().filter(txtFilter.toString());
+
+        mAdapter.getFilter().filter(txtFilter.getText().toString());
 
     }
 }
