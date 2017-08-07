@@ -22,11 +22,11 @@ public class FilterOptionsDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static FilterOptionsDialogFragment newInstance(String filter_in) {
+    public static FilterOptionsDialogFragment newInstance(String filter_field) {
         FilterOptionsDialogFragment fragment = new FilterOptionsDialogFragment();
 
         Bundle args = new Bundle();
-        args.putString("filter_in", filter_in);
+        args.putString(GlossaryFragment.COOKIE_FILTER_FIElD, filter_field);
 
         fragment.setArguments(args);
         return fragment;
@@ -35,9 +35,11 @@ public class FilterOptionsDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            filter_in = getArguments().getString("filter_in");
-        }
+        Bundle bundle = this.getArguments();
+        //if (bundle != null) {
+        filter_in = getArguments().getString(GlossaryFragment.COOKIE_FILTER_FIElD);
+        //}
+        Log.i("DialogCreate", filter_in);
     }
 
     @Override
@@ -52,29 +54,29 @@ public class FilterOptionsDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        RadioButton rad = (RadioButton) view.findViewById(R.id.radio_all);
-        rad.setOnClickListener(new View.OnClickListener() {
+        RadioButton rada = (RadioButton) view.findViewById(R.id.radio_all);
+        rada.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 onRadioButtonClicked(view);
             }
         });
-        rad.setChecked(filter_in == GlossaryAdapter.FILTER_ALL);
+        rada.setChecked(true); // default
 
-        rad = (RadioButton) view.findViewById(R.id.radio_terms);
-        rad.setOnClickListener(new View.OnClickListener() {
+        RadioButton radb = (RadioButton) view.findViewById(R.id.radio_terms);
+        radb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 onRadioButtonClicked(view);
             }
         });
-        rad.setChecked(filter_in == GlossaryAdapter.FILTER_TERM);
+        radb.setChecked(filter_in == GlossaryAdapter.FILTER_TERM);
 
-        rad = (RadioButton) view.findViewById(R.id.radio_definitions);
-        rad.setOnClickListener(new View.OnClickListener() {
+        RadioButton radC = (RadioButton) view.findViewById(R.id.radio_definitions);
+        radC.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 onRadioButtonClicked(view);
             }
         });
-        rad.setChecked(filter_in == GlossaryAdapter.FILTER_DEFINITION);
+        radC.setChecked(filter_in == GlossaryAdapter.FILTER_DEFINITION);
 
         getDialog().setTitle("Filter by");
 

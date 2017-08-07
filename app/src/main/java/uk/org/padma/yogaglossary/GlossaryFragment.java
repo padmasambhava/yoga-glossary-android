@@ -35,6 +35,9 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     Button buttClear;
     Button buttFilterOptions;
 
+    public static final String COOKIE_FILTER_FIElD = "filter_field";
+
+    private SharedPreferences mPrefs;
 
     public GlossaryFragment() {
         // Required empty public constructor
@@ -63,17 +66,24 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String filter_field = mPrefs.getString(COOKIE_FILTER_FIElD, GlossaryAdapter.FILTER_ALL);
+
         buttFilterOptions = (Button) getActivity().findViewById(R.id.butt_filter_options);
         buttFilterOptions.setOnClickListener(new View.OnClickListener() {
              public void onClick(View v) {
-                 SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
+                 //SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                 String ff = mPrefs.getString(COOKIE_FILTER_FIElD, GlossaryAdapter.FILTER_ALL);
                  FragmentManager fm = getActivity().getSupportFragmentManager();
-                 FilterOptionsDialogFragment optsDialog = FilterOptionsDialogFragment.newInstance(mSettings.getString("filter_in", GlossaryAdapter.FILTER_ALL));
+                 FilterOptionsDialogFragment optsDialog = FilterOptionsDialogFragment.newInstance(ff);
                  optsDialog.setTargetFragment(GlossaryFragment.this, 300);
                  optsDialog.show(fm, "fragment_edit_name");
              }
-         });
+        });
+        setButtFilterLabel(filter_field);
+
+
         // Setup Clear Button
         buttClear = (Button) getActivity().findViewById(R.id.butt_clear);
         buttClear.setOnClickListener(new View.OnClickListener() {
@@ -114,8 +124,7 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
 
         // Setup adapter and filter
         mAdapter = new GlossaryAdapter(getActivity(), new ArrayList<GEntry>());
-        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mAdapter.setFilterField(mSettings.getString("filter_in", GlossaryAdapter.FILTER_ALL));
+        mAdapter.setFilterField(filter_field);
 
         ListView mListView = (ListView) getActivity().findViewById(R.id.glossary_listview);
         mListView.setAdapter(mAdapter);
@@ -171,27 +180,32 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
 
     }
 
-    // This is called when the dialog is completed and the results have been passed
-    @Override
-    public void onFinishEditDialog(String nfilter_in) {
-        //Log.i("YES RETURN", nfilter_in);
-        switch(nfilter_in){
-            case GlossaryAdapter.FILTER_ALL:
-                buttFilterOptions.setText("Everything");
-                break;
+    public void setButtFilterLabel(String filter_field){
+        switch(filter_field){
             case GlossaryAdapter.FILTER_TERM:
                 buttFilterOptions.setText("Terms");
                 break;
             case GlossaryAdapter.FILTER_DEFINITION:
                 buttFilterOptions.setText("Defintions");
                 break;
+            case GlossaryAdapter.FILTER_ALL:
+            default:
+                buttFilterOptions.setText("Everything");
+                break;
         }
-        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString("filter_in", nfilter_in);
+    }
+
+    // This is called when the dialog is completed and the results have been passed
+    @Override
+    public void onFinishEditDialog(String filter_field) {
+        Log.i("Dialog RETURNs", filter_field);
+        setButtFilterLabel(filter_field);
+
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(COOKIE_FILTER_FIElD, filter_field);
         editor.apply();
-        mAdapter.setFilterField(nfilter_in);
-        //mAdapter.getFilter().filter(txtFilter.toString());
+        mAdapter.setFilterField(filter_field);
+        mAdapter.getFilter().filter(txtFilter.toString());
 
     }
 }

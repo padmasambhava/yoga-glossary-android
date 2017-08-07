@@ -3,6 +3,7 @@ package uk.org.padma.yogaglossary;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
     //private String filter_in;
     public void setFilterField(String txt){
         filter_field = txt;
-        notifyDataSetInvalidated();
+        //notifyDataSetInvalidated();
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -89,6 +90,8 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
         protected FilterResults performFiltering(CharSequence chars) {
 
             String filterSeq = chars.toString().toLowerCase();
+
+            Log.i("filter===", filterSeq +  mParent.filter_field);
 
             FilterResults result = new FilterResults();
             if (filterSeq != null && filterSeq.length() > 0) {
