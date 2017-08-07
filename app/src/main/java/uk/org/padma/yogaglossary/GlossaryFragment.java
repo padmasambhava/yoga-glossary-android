@@ -174,16 +174,16 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     // This is called when the dialog is completed and the results have been passed
     @Override
     public void onFinishEditDialog(String nfilter_in) {
-        Log.i("YES RETURN", nfilter_in);
+        //Log.i("YES RETURN", nfilter_in);
         switch(nfilter_in){
             case GlossaryAdapter.FILTER_ALL:
-                buttFilterOptions.setText("All");
+                buttFilterOptions.setText("Everything");
                 break;
             case GlossaryAdapter.FILTER_TERM:
                 buttFilterOptions.setText("Terms");
                 break;
             case GlossaryAdapter.FILTER_DEFINITION:
-                buttFilterOptions.setText("Defintion");
+                buttFilterOptions.setText("Defintions");
                 break;
         }
         SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -191,6 +191,7 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
         editor.putString("filter_in", nfilter_in);
         editor.apply();
         mAdapter.setFilterField(nfilter_in);
+        //mAdapter.getFilter().filter(txtFilter.toString());
 
     }
 }

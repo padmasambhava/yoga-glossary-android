@@ -13,12 +13,12 @@
 
         <Button
             android:id="@+id/butt_filter_options"
-            android:layout_width="100dp"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="0"
-            android:text="Definition"
-            />
+            android:text="Everything" />
 
         <EditText
             android:id="@+id/txt_filter"
