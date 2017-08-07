@@ -1,9 +1,6 @@
 package uk.org.padma.yogaglossary;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +30,10 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
         this.entries = entries;
     }
 
-    //private String filter_in;
     public void setFilterField(String txt){
         filter_field = txt;
-        //notifyDataSetInvalidated();
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -82,27 +78,18 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
                 sourceObjects.addAll(objects);
             }
         }
-        //public void setFilterField(String txt){
-        //    this.filter_field = txt;
-       // }
 
         @Override
         protected FilterResults performFiltering(CharSequence chars) {
 
             String filterSeq = chars.toString().toLowerCase();
-
-            Log.i("filter===", filterSeq);
-            Log.i("filter===", mParent.filter_field);
-
             FilterResults result = new FilterResults();
-            //if (filterSeq != null && filterSeq.length() > 0) {
+
             if (filterSeq.length() > 0) {
                 ArrayList<GEntry> filter = new ArrayList<GEntry>();
-                //String filter_field = mParent.filter_field;
-                //for (GEntry ent : sourceObjects) {
-                Log.i("filter===", "FOOOOOOOOOO");
                 for (int idx = 0; idx < sourceObjects.size(); idx++){
                     GEntry ent = sourceObjects.get(idx);
+
                     // the filtering itself:
                     switch(mParent.filter_field) {
 
@@ -145,17 +132,17 @@ public class GlossaryAdapter extends ArrayAdapter<GEntry>  implements Filterable
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
+
             // NOTE: this function is *always* called from the UI thread.
             ArrayList<GEntry> filtered = (ArrayList<GEntry>) results.values;
             notifyDataSetChanged();
             clear();
-            for (int i = 0, l = filtered.size(); i < l; i++)
+            for (int i = 0, l = filtered.size(); i < l; i++) {
                 add((GEntry) filtered.get(i));
+            }
             notifyDataSetInvalidated();
         }
     }
-
-
 
     @Override
     public Filter getFilter() {

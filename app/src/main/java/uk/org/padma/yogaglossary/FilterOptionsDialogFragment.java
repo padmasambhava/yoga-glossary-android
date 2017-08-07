@@ -1,16 +1,13 @@
 package uk.org.padma.yogaglossary;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.RadioButton;
 
 
@@ -19,7 +16,6 @@ public class FilterOptionsDialogFragment extends DialogFragment {
     private String filter_in = GlossaryAdapter.FILTER_ALL;
 
     public FilterOptionsDialogFragment() {
-        // Required empty public constructor
     }
 
     public static FilterOptionsDialogFragment newInstance(String filter_field) {
@@ -36,10 +32,7 @@ public class FilterOptionsDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
-        //if (bundle != null) {
-        filter_in = getArguments().getString(GlossaryFragment.COOKIE_FILTER_FIElD);
-        //}
-        Log.i("DialogCreate", filter_in);
+        filter_in = bundle.getString(GlossaryFragment.COOKIE_FILTER_FIElD);
     }
 
     @Override
@@ -53,7 +46,9 @@ public class FilterOptionsDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getDialog().setTitle("Filter by");
 
+        // Setup Radio buttons
         RadioButton rada = (RadioButton) view.findViewById(R.id.radio_all);
         rada.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -78,8 +73,6 @@ public class FilterOptionsDialogFragment extends DialogFragment {
         });
         radC.setChecked(filter_in == GlossaryAdapter.FILTER_DEFINITION);
 
-        getDialog().setTitle("Filter by");
-
         // Show soft keyboard automatically and request focus to field
         //mEditText.requestFocus();
         //getDialog().getWindow().setSoftInputMode(
@@ -88,10 +81,8 @@ public class FilterOptionsDialogFragment extends DialogFragment {
 
     public void onRadioButtonClicked(View view) {
 
-        // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
 
-        // Check which radio button was clicked
         switch(view.getId()) {
 
             case R.id.radio_terms:
@@ -109,7 +100,6 @@ public class FilterOptionsDialogFragment extends DialogFragment {
                     filter_in = GlossaryAdapter.FILTER_ALL;
                 }
         }
-        Log.i("YES", filter_in);
         sendBackResult();
     }
 

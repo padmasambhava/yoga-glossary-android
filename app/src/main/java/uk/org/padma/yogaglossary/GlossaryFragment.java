@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +38,8 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     private SharedPreferences mPrefs;
 
     public GlossaryFragment() {
-        // Required empty public constructor
     }
 
-
-    // TODO: Rename and change types and number of parameters
     public static GlossaryFragment newInstance() {
         GlossaryFragment fragment = new GlossaryFragment();
         return fragment;
@@ -92,22 +88,20 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
 
         // Setup Filter Text
         txtFilter = (EditText) getActivity().findViewById(R.id.txt_filter);
-        int leadingMargin = 16;
-        //txtFilter.setSpan(new BulletSpan(leadingMargin), start, end, 0);
         txtFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
+                // Auto-generated method stub
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
+                // Auto-generated method stub
              }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i("ontext", String.valueOf(s));
+                //Log.i("ontext", String.valueOf(s));
                 if (s.length() == 0) {
                     buttClear.setVisibility(View.INVISIBLE);
                 } else {
@@ -120,13 +114,14 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
 
 
 
-        // Setup adapter and filter
+        // Setup listview, adapter and filter
         mAdapter = new GlossaryAdapter(getActivity(), new ArrayList<GEntry>());
         mAdapter.setFilterField(filter_field);
 
         ListView mListView = (ListView) getActivity().findViewById(R.id.glossary_listview);
         mListView.setAdapter(mAdapter);
 
+        // Parse and load json
         String json_str = null;
         try {
 
@@ -152,6 +147,7 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
             return;
         }
 
+        // Load to memory
         JSONObject je;
         for (int i = 0; i < m_glossary.length(); i++) {
             try {
@@ -171,10 +167,7 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
                 ent.search += darr.optString(ii).replace("'","").replace(",", "");
             }
             mAdapter.entries.add(ent);
-
         }
-
-
     }
 
     public void setButtFilterLabel(String filter_field){
@@ -195,15 +188,14 @@ public class GlossaryFragment extends Fragment implements FilterOptionsDialogFra
     // This is called when the dialog is completed and the results have been passed
     @Override
     public void onFinishEditDialog(String filter_field) {
-        //Log.i("Dialog RETURN===", filter_field);
-        //Log.i("Dialog txtFilter", txtFilter.getText().toString());
-        setButtFilterLabel(filter_field);
 
+        // save filter_files option
         SharedPreferences.Editor editor = mPrefs.edit();
         editor.putString(COOKIE_FILTER_FIElD, filter_field);
         editor.commit();
-        mAdapter.setFilterField(filter_field);
 
+        setButtFilterLabel(filter_field);
+        mAdapter.setFilterField(filter_field);
         mAdapter.getFilter().filter(txtFilter.getText().toString());
 
     }
