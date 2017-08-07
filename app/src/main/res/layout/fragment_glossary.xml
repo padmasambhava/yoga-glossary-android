@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/butt_filter_type"
+            android:id="@+id/butt_filter_options"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -25,8 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:inputType="textFilter"
-            />
+            android:hint="filter"
+            android:inputType="textFilter" />
 
         <Button
             android:id="@+id/butt_clear"

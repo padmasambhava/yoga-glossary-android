@@ -1,8 +1,11 @@
 package uk.org.padma.yogaglossary;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,28 +26,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link GlossaryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class GlossaryFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    //private static final String ARG_PARAM1 = "param1";
-    //private static final String ARG_PARAM2 = "param2";
-    //public ArrayList<GEntry> entries = new ArrayList<GEntry>();
+
+public class GlossaryFragment extends Fragment implements FilterOptionsDialogFragment.FilterOptionsDialogListener {
+
     public GlossaryAdapter mAdapter;
 
     EditText txtFilter;
     Button buttClear;
+    Button buttFilterOptions;
 
-
-    // TODO: Rename and change types of parameters
-    //private String mParam1;
-    //private String mParam2;
-    //public ArrayList<MainActivity.GEntry> entries = new ArrayList<MainActivity.GEntry>();
-    //public MainActivity.GlossaryAdapter mAdapter;
 
     public GlossaryFragment() {
         // Required empty public constructor
@@ -53,20 +44,12 @@ public class GlossaryFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static GlossaryFragment newInstance() {
         GlossaryFragment fragment = new GlossaryFragment();
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -80,6 +63,17 @@ public class GlossaryFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        buttFilterOptions = (Button) getActivity().findViewById(R.id.butt_filter_options);
+        buttFilterOptions.setOnClickListener(new View.OnClickListener() {
+             public void onClick(View v) {
+                 SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                 FragmentManager fm = getActivity().getSupportFragmentManager();
+                 FilterOptionsDialogFragment optsDialog = FilterOptionsDialogFragment.newInstance(mSettings.getString("filter_in", GlossaryAdapter.FILTER_ALL));
+                 optsDialog.setTargetFragment(GlossaryFragment.this, 300);
+                 optsDialog.show(fm, "fragment_edit_name");
+             }
+         });
         // Setup Clear Button
         buttClear = (Button) getActivity().findViewById(R.id.butt_clear);
         buttClear.setOnClickListener(new View.OnClickListener() {
@@ -117,8 +111,11 @@ public class GlossaryFragment extends Fragment {
         });
 
 
-        //mAdapter = new GlossaryAdapter(getActivity(), entries);
+
+        // Setup adapter and filter
         mAdapter = new GlossaryAdapter(getActivity(), new ArrayList<GEntry>());
+        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mAdapter.setFilterField(mSettings.getString("filter_in", GlossaryAdapter.FILTER_ALL));
 
         ListView mListView = (ListView) getActivity().findViewById(R.id.glossary_listview);
         mListView.setAdapter(mAdapter);
@@ -171,6 +168,29 @@ public class GlossaryFragment extends Fragment {
 
         }
 
+
+    }
+
+    // This is called when the dialog is completed and the results have been passed
+    @Override
+    public void onFinishEditDialog(String nfilter_in) {
+        Log.i("YES RETURN", nfilter_in);
+        switch(nfilter_in){
+            case GlossaryAdapter.FILTER_ALL:
+                buttFilterOptions.setText("All");
+                break;
+            case GlossaryAdapter.FILTER_TERM:
+                buttFilterOptions.setText("Terms");
+                break;
+            case GlossaryAdapter.FILTER_DEFINITION:
+                buttFilterOptions.setText("Defintion");
+                break;
+        }
+        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString("filter_in", nfilter_in);
+        editor.apply();
+        mAdapter.setFilterField(nfilter_in);
 
     }
 }

@@ -7,7 +7,7 @@ public class GEntry {
     public ArrayList<String> definition;
     public String search;
 
-    public GEntry(){ //String term, String definition) {
+    public GEntry(){
         this.definition = new ArrayList<String>();
     }
 }
